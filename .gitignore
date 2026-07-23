@@ -1,0 +1,19 @@
+# =========================
+# Diretórios de compilação
+# =========================
+build/
+dist/
+
+# Arquivos compilados
+*.class
+
+# Configurações locais do NetBeans
+nbproject/private/
+
+# Arquivos temporários
+*.log
+*.tmp
+
+# Sistema Operacional
+Thumbs.db
+.DS_Store
