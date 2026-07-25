@@ -8,7 +8,7 @@ package model;
  *
  * @author Lucas Oliveira
  */
-public class TarefaPrioritaria extends Tarefa{
+public class TarefaPrioritaria extends BaseTarefa{
     private String prioridade;
 
     public TarefaPrioritaria(){
