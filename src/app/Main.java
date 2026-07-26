@@ -1,13 +1,13 @@
+/**
+ *
+ * @author Lucas Oliveira
+ */
 
 package app;
 import java.util.Scanner;
 import controller.TaskManager;
 import view.TaskView;
 
-/**
- *
- * @author Lucas Oliveira
- */
 
 public class Main{
     public static void main(String[] args) {
@@ -15,7 +15,9 @@ public class Main{
         TaskManager manager = new TaskManager();
         TaskView view = new TaskView(manager, sc);
         
-        view.iniciar();
         
+        
+        
+        view.iniciar();
     }
 }

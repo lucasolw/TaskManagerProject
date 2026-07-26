@@ -1,16 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+/**
+ *
+ * @author Lucas Oliveira
  */
+
 package util;
 import java.io.IOException;
 
-/**
- *
- * @author lucas
- */
+
 public class Console {
-    public static void clear(){ //Só funciona .jar executado no CMD
+    public static void clear(){
         try {
             if (System.getProperty("os.name").contains("Windows")) {
                 new ProcessBuilder("cmd", "/c", "cls")

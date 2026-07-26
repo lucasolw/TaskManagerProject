@@ -1,13 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package model;
-
 /**
  *
  * @author Lucas Oliveira
  */
+
+package model;
+
+import exception.ExceptionValidation;
+
+
 public abstract class BaseTarefa {
     private String titulo;
     private String descricao;
@@ -25,7 +25,20 @@ public abstract class BaseTarefa {
         return concluida;
     }
 
-    public void setTitulo(String titulo) {
+    public void setTitulo(String titulo) throws ExceptionValidation{
+        
+        if (titulo == null || titulo.isBlank()){
+            throw new IllegalArgumentException(
+                "O título não pode estar vazio."
+            );
+        }
+
+        if (titulo.matches("\\d+")){
+            throw new IllegalArgumentException(
+                "O titulo nao pode conter somente numeros."
+            );
+        }
+
         this.titulo = titulo;
     }
 
@@ -35,5 +48,12 @@ public abstract class BaseTarefa {
 
     public void setConcluida(boolean concluida) {
         this.concluida = concluida;
+    }
+    
+    @Override
+    public String toString(){
+        return "Titulo: "+getTitulo()+
+               "\nDescricao: "+getDescricao()+
+               "\nConcluida: "+(getConcluida() ? "Sim" : "Nao");
     }
 }

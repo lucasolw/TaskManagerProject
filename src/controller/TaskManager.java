@@ -1,16 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package controller;
-import java.util.ArrayList;
-import java.util.List;
-import model.BaseTarefa;
-import model.TarefaPrioritaria;
 /**
  *
  * @author Lucas Oliveira
  */
+
+package controller;
+import exception.ExceptionValidation;
+import java.util.ArrayList;
+import java.util.List;
+import model.BaseTarefa;
+import model.TarefaPrioritaria;
+
 public class TaskManager{
     private final ArrayList<BaseTarefa> lista = new ArrayList<>();
     
@@ -19,7 +18,14 @@ public class TaskManager{
     public void adicionarTarefa(
             String titulo,
             String descricao,
-            String prioridade){
+            String prioridade) throws ExceptionValidation{
+        
+        if(titulo.matches("\\d+")){
+            throw new IllegalArgumentException(
+                    "O titulo nao pode conter somente numeros"
+            );
+        }
+        
         
         TarefaPrioritaria tarefa = new TarefaPrioritaria();
         tarefa.setTitulo(titulo);

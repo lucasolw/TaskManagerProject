@@ -1,9 +1,14 @@
+/**
+ *
+ * @author Lucas Oliveira
+ */
 
 package view;
 
 import java.util.Scanner;
 import java.util.InputMismatchException;
 import controller.TaskManager;
+import exception.ExceptionValidation;
 import model.BaseTarefa;
 import java.util.List;
 import util.Console;
@@ -21,6 +26,7 @@ public class TaskView{
     }
     
     public void adicionarTarefa(){
+        OUTER:
         while(true){
             System.out.println("\n1. Criar tarefa");
             System.out.println("2. Sair");
@@ -28,30 +34,43 @@ public class TaskView{
                 int opcao = sc.nextInt();
                 sc.nextLine();
                 
-                if(opcao == 1){
-                    
-                        System.out.print("Título: ");
+                switch(opcao){
+                    case 1:
+                        System.out.print("Titulo: ");
                         String titulo = sc.nextLine();
 
-                        System.out.print("Descrição: ");
+                        System.out.print("Descricao: ");
                         String descricao = sc.nextLine();
 
                         System.out.print("Prioridade: ");
                         String prioridade = sc.nextLine();
-                        manager.adicionarTarefa(
+                        try{
+                            manager.adicionarTarefa(
                                 titulo,
                                 descricao,
                                 prioridade
-                        );
+                            );
+                        }
+                        catch(ExceptionValidation e){
+                            System.out.println(e.getMessage());
+                        }
+                        
                         System.out.println("Tarefa adicionada com sucesso!");
-                }
-                else if(opcao == 2){
-                    break;
-                    
+                    case 2:
+                        Console.clear();
+                        break OUTER;
+                    default:
+                        System.out.println("Erro ao criar a tarefa");
+                        break;
                 }
             }
-            catch(InputMismatchException e){
-                System.out.println("*Digite somente numeros*");
+            catch(IllegalArgumentException | InputMismatchException e){
+                System.out.println(
+                        """
+                        *Nao e permitido uma tarefa somente com numeros! *
+                        letras e numeros sao permitidas"""
+                );
+                
                 sc.nextLine();
             }
         }
@@ -166,7 +185,6 @@ public class TaskView{
     public void concluirTarefa(){
         List<BaseTarefa> lista = manager.listarTarefas();
         
-        
         if(lista.isEmpty()){
             Console.clear();
             System.out.println("Lista vazia!!");
@@ -174,24 +192,23 @@ public class TaskView{
         }
         Console.clear();
         
-        
-        System.out.println("\n===== Tarefas nao concluidas =====");
-        List<BaseTarefa> pendentes = manager.listarPendentes();
-        for(int i = 0; i < pendentes.size(); i++){
-            System.out.println(
-                    (i + 1) + " - "+
-                    pendentes.get(i).getTitulo()
-                );
-        }
-        
-    
-        
-        if(pendentes.isEmpty()){
-            System.out.println("Nenhuma tarefa pendente");
-            return;
-        }
-        
         try{
+            List<BaseTarefa> pendentes = manager.listarPendentes();
+            if(!pendentes.isEmpty()){
+                System.out.println("\n===== Tarefas nao concluidas =====");
+
+                for(int i = 0; i < pendentes.size(); i++){
+                    System.out.println(
+                            (i + 1) + " - "+
+                            pendentes.get(i).getTitulo()
+                        );
+                }
+            }
+            else{
+                System.out.println("Nenhuma tarefa pendente");
+                return;
+            }
+            
             System.out.println("Escolha uma tarefa para ser concluida: ");
             int indice = sc.nextInt();
             sc.nextLine();
