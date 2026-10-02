@@ -14,7 +14,7 @@ public class TarefaPrioritaria extends Tarefa{
     public TarefaPrioritaria(){
         
     }
-    public TarefaPrioritaria(String titulo, String descricao, String prioridade, boolean concluida){
+    public TarefaPrioritaria(String titulo, String descricao, boolean concluida, String prioridade){
         this.setTitulo(titulo);
         this.setDescricao(descricao);
         this.setConcluida(concluida);

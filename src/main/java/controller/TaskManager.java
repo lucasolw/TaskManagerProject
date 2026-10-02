@@ -65,8 +65,8 @@ public class TaskManager{
                     tarefa = new TarefaPrioritaria(
                             titulo,
                             descricao,
-                            prioridade,
-                            false
+                            false,
+                            prioridade
                     );
 
 
