@@ -17,3 +17,10 @@ nbproject/private/
 # Sistema Operacional
 Thumbs.db
 .DS_Store
+
+#Arquivos IntelliJ
+.idea/
+*.iml
+
+#Maven
+target/

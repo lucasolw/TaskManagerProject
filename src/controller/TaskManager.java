@@ -1,137 +1,179 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package controller;
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import model.Tarefa;
-import model.TarefaPrioritaria;
 /**
  *
  * @author Lucas Oliveira
  */
+
+package controller;
+import java.util.List;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+
+import model.Tarefa;
+import model.TarefaPrioritaria;
+import repository.RepositorioGenerics;
+
 public class TaskManager{
-    private final ArrayList<Tarefa> lista = new ArrayList<>();
+    private final RepositorioGenerics<Tarefa> lista;
     private final Scanner sc;
-    
+
     public TaskManager(Scanner sc){
         this.sc = sc;
-        
+        this.lista = new RepositorioGenerics<>();
     }
-    
-    public static void clearConsole() { //Só funciona .jar executado no CMD
-        try {
-            if (System.getProperty("os.name").contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls")
-                    .inheritIO()
-                    .start()
-                    .waitFor();
-            } 
-            else {
-                new ProcessBuilder("clear")
-                    .inheritIO()
-                    .start()
-                    .waitFor();
+
+
+
+
+    public void adicionarTarefa(){
+
+        while(true){
+            System.out.println("\n1. Criar tarefa");
+            System.out.println("\n2. Criar Tarefa(com Prioridade)");
+            System.out.println("\n3. Sair");
+
+            try{
+                int opcao = sc.nextInt();
+                sc.nextLine();
+
+                if(opcao == 3){
+                    break;
+                }
+                if(opcao != 1 && opcao != 2){
+                    System.out.println("Opcao invalida!");
+                    continue;
+                }
+
+                System.out.print("Titulo: ");
+                String titulo = sc.nextLine();
+
+                System.out.print("Descricao: ");
+                String descricao = sc.nextLine();
+
+                Tarefa tarefa;
+                if(opcao == 1) {
+                    tarefa = new Tarefa(
+                            titulo,
+                            descricao
+                    );
+
+                }
+                else{
+                    System.out.println("Prioridade: ");
+                    String prioridade = sc.nextLine();
+
+                    tarefa = new TarefaPrioritaria(
+                            titulo,
+                            descricao,
+                            prioridade,
+                            false
+                    );
+
+
+
+                }
+                lista.adicionarElemento(tarefa);
+                System.out.println("\nTarefa adicionada com sucesso!!");
+
             }
-        } 
-        catch (IOException | InterruptedException e) {
-            System.out.println("Não foi possível limpar o console.");
+            catch(InputMismatchException e){
+                System.out.println("*Digite somente numeros*");
+                sc.nextLine();
+            }
         }
     }
-    
+
     public void listarTarefas(){
-        clearConsole();
-        
+
         OUTER:
         while (true) {
             System.out.println("\n1. Listar tarefas");
             System.out.println("2. Sair");
             try {
                 int opcao = sc.nextInt();
-                
                 switch (opcao) {
                     case 1:
-                        if(lista.isEmpty()){
+                        List<Tarefa> tarefas = lista.listarElementos();
+                        if(tarefas.isEmpty()){
                             System.out.println("Lista vazia!!");
                             continue;
                         }
-                        System.out.println("\nSelecione uma das tarefa:");
-                        
-                        for(int i = 0; i < lista.size(); i++){
-                            System.out.println((i + 1) + " - " + lista.get(i).getTitulo());
 
+                        System.out.println("\nSelecione uma das tarefa:");
+
+                        for(int i = 0; i < tarefas.size(); i++){
+                            System.out.println((i + 1) + " - " + tarefas.get(i).getTitulo());
                         }
+
                         int index = sc.nextInt();
                         
-                        if(index < 1 || index > lista.size()){
+                        if(index < 1 || index > tarefas.size()){
                             System.out.println("\nIndice invalido!!");
-                            return;
+                            continue;
                         }
                         
-                        int indice = index - 1;
-                        clearConsole();
-                        
-                        Tarefa tarefa = lista.get(indice);
+
+                        Tarefa tarefa = tarefas.get(index - 1);
+
                         System.out.println("\n===== INFORMACOES DA TAREFA =====");
-                        System.out.println(tarefa.toString());
+                        System.out.println(tarefa);
                         break;
                     case 2:
-                        clearConsole();
                         break OUTER;
                     default:
                         System.out.println("\nOpcao invalida!");
-                        break;
                 }
             }
             catch(InputMismatchException e){
-                System.out.println("*Digite somente numeros*");
+                System.out.println("**Digite somente numeros**");
                 sc.nextLine();
             }
         }
     }
 
     public void removerTarefa(){
-        clearConsole();
+
         while(true){
             System.out.println("\n1. Remover tarefa");
             System.out.println("2. Sair");
-            
+
             try{
                 int opcao = sc.nextInt();
 
                 if(opcao == 1){
-                    if(!lista.isEmpty()){
-                        
-                        System.out.println("\nSelecione uma tarefa que deseja remover: ");
+                    List<Tarefa> tarefas = lista.listarElementos();
 
-                        for(int i = 0; i < lista.size(); i++){
-                            System.out.println((i + 1) + " - " + lista.get(i).getTitulo());
-
-                        }
-                        int index = sc.nextInt();
-
-                        if(index < 1 || index > lista.size()){
-                            System.out.println("Indice invalido!");
-                            continue;
-
-                        } 
-                        lista.remove(index - 1);
-                        clearConsole();
-                        System.out.println("\nTarefa removida com sucesso!!");
-
-                    }
-                    else{
-                        clearConsole();
+                    if(tarefas.isEmpty()) {
                         System.out.println("\nLista vazia!!");
                         break;
                     }
+                    System.out.println("\nSelecione uma tarefa que deseja remover: ");
+
+                    for(int i = 0; i < tarefas.size(); i++){
+                        System.out.println(
+                                (i + 1) + " - " +
+                                tarefas.get(i).getTitulo()
+                        );
+                    }
+
+                    int index = sc.nextInt();
+
+                    if(index < 1 || index > tarefas.size()){
+                        System.out.println("Indice invalido!");
+                        continue;
+                    }
+
+                    Tarefa tarefa = tarefas.get(index - 1);
+                    lista.removerElemento(tarefa);
+
+                    System.out.println("\nTarefa removida com sucesso!!");
+
                 }
                 else if(opcao == 2){
-                    clearConsole();
                     break;
+                }
+                else {
+                    System.out.println("Opcao invalida!");
                 }
             }
             catch(InputMismatchException e){
@@ -141,67 +183,27 @@ public class TaskManager{
         }
     }
     
-    public void adicionarTarefa(){
-        clearConsole();
-        while(true){
-            System.out.println("\n1. Criar tarefa");
-            System.out.println("2. Sair");
-            try{
-                int opcao = sc.nextInt();
-                sc.nextLine();
-                
-                if(opcao == 1){
-                    try{
-                        TarefaPrioritaria tarefa = new TarefaPrioritaria();
 
-                        System.out.print("Titulo: ");
-                        tarefa.setTitulo(sc.nextLine());
-
-                        System.out.print("Descricao: ");
-                        tarefa.setDescricao(sc.nextLine());
-
-                        System.out.print("Prioridade: ");
-                        tarefa.setPrioridade(sc.nextLine());
-
-                        lista.add(tarefa);
-                        clearConsole();
-                        System.out.println("\nTarefa adicionada com sucesso!!");
-
-                    }
-                    catch(Exception e){
-                        System.out.println("Erro: "+e.getMessage());
-                    }
-
-                }
-                else if(opcao == 2){
-                    clearConsole();
-                    break;
-                }
-            }
-            catch(InputMismatchException e){
-                System.out.println("*Digite somente numeros*");
-                sc.nextLine();
-            }
-        }
-    }
     public void concluirTarefa(){
+        List<Tarefa> tarefas = lista.listarElementos();
         ArrayList<Tarefa> pendentes = new ArrayList<>();
         
-        if(lista.isEmpty()){
-            clearConsole();
+        if(tarefas.isEmpty()){
             System.out.println("Lista vazia!!");
             return;
         }
-        clearConsole();
+
         System.out.println("\n===== Tarefas nao concluidas =====");
-        
-        for(int i = 0; i < lista.size(); i++){
-            if(!lista.get(i).getConcluida()){
-                pendentes.add(lista.get(i));
+
+        //Compara cada indice da lista para saber se foi concluida
+        for(Tarefa tarefa : tarefas){
+            if(!tarefa.getConcluida()){
+                //Joga a tarefa na lista de Pendentes
+                pendentes.add(tarefa);
                 
                 System.out.println(
                     pendentes.size() + " - "+
-                    lista.get(i).getTitulo()
+                    tarefa.getTitulo()
                 );
             }
         }
@@ -209,9 +211,11 @@ public class TaskManager{
             System.out.println("Nenhuma tarefa pendente");
             return;
         }
-        
+
+
         try{
             System.out.println("Escolha uma tarefa para ser concluida: ");
+
             int index = sc.nextInt();
             sc.nextLine();
             
@@ -221,9 +225,8 @@ public class TaskManager{
             }
 
             Tarefa tarefa = pendentes.get(index - 1);
-            
             tarefa.setConcluida(true);
-            clearConsole();
+
             System.out.println(
                 "A "+tarefa.getTitulo()+
                 " foi concluida com sucesso!"

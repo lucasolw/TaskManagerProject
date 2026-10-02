@@ -6,6 +6,7 @@ package app;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 import controller.TaskManager;
+
 /**
  *
  * @author Lucas Oliveira
@@ -18,7 +19,7 @@ public class Main{
         
         while(true){
             
-            System.out.println("===== TASK MANAGER =====");
+            System.out.println("===== TASK-MANAGER =====");
             System.out.println("1. Criar tarefas");
             System.out.println("2. Listar tarefas");
             System.out.println("3. Marcar tarefa como concluida");
@@ -60,6 +61,5 @@ public class Main{
     
     public static void main(String[] args) {
         selectionScreen();
-        
     }
 }
